@@ -163,6 +163,52 @@ app.route('/api/pessoas/:id').delete((request, response) => {
 });
 
 
+// ########################## \\
+// BOOKS CATEGORIES endpoints \\
+// ########################## \\
+app.route('/api/books/categories').get((request, response) => {
+    console.log("=> get:/api/books/categories");
+    response.send(BOOKS_CATEGORIES);
+});
+
+app.route('/api/books/categories/:id').get((request, response) => {
+    const bookCategoryId = +request.params['id'];
+
+    console.log("=> get:/api/books/categories/" + bookCategoryId);
+    response.status(200).send(BOOKS_CATEGORIES.find(bookCategoryIterator => bookCategoryIterator.id === bookCategoryId));
+});
+
+app.route('/api/books/categories').post((request, response) => {
+    let bookCategory = request.body;
+
+    bookCategory.id = BOOKS_CATEGORIES ? Math.max.apply(null, BOOKS_CATEGORIES.map(bookIterator => bookCategoryIterator.id)) + 1 : 1;
+    BOOKS_CATEGORIES.push(book);
+
+    console.log("=> post:/api/books/categories");
+    response.status(201).send(book);
+});
+
+app.route('/api/books/categories/:id').put((request, response) => {
+    const bookCategoryId = +request.params['id'];
+    const bookCategory = request.body;
+
+    const index = BOOKS_CATEGORIES.findIndex(bookIterator => bookCategoryIterator.id === bookCategoryId);
+    BOOKS_CATEGORIES[index] = bookCategory;
+
+    console.log("=> put:/api/books/categories/" + bookCategoryId);
+    response.status(200).send(book);
+});
+
+app.route('/api/books/categories/:id').delete((request, response) => {
+    const bookCategoryId = +request.params['id'];
+    const bookCategoryDeleted = BOOKS_CATEGORIES.find(bookIterator => bookCategoryIterator.id === bookCategoryId);
+    BOOKS_CATEGORIES = BOOKS_CATEGORIES.filter(bookIterator => bookCategoryIterator.id !== bookCategoryId);
+
+    console.log("=> delete:/api/books/categories/" + bookCategoryId);
+    response.status(200).send(bookDeleted);
+});
+
+
 // ############### \\
 // BOOKS endpoints \\
 // ############### \\
@@ -205,52 +251,6 @@ app.route('/api/books/:id').delete((request, response) => {
     BOOKS = BOOKS.filter(bookIterator => bookIterator.id !== bookId);
 
     console.log("=> delete:/api/books/" + bookId);
-    response.status(200).send(bookDeleted);
-});
-
-
-// ########################## \\
-// BOOKS CATEGORIES endpoints \\
-// ########################## \\
-app.route('/api/books/categories').get((request, response) => {
-    console.log("=> get:/api/books/categories");
-    response.send(BOOKS_CATEGORIES);
-});
-
-app.route('/api/books/categories/:id').get((request, response) => {
-    const bookCategoryId = +request.params['id'];
-
-    console.log("=> get:/api/books/categories/" + bookCategoryId);
-    response.status(200).send(BOOKS_CATEGORIES.find(bookIterator => bookCategoryIterator.id === bookCategoryId));
-});
-
-app.route('/api/books/categories').post((request, response) => {
-    let bookCategory = request.body;
-
-    bookCategory.id = BOOKS_CATEGORIES ? Math.max.apply(null, BOOKS_CATEGORIES.map(bookIterator => bookCategoryIterator.id)) + 1 : 1;
-    BOOKS_CATEGORIES.push(book);
-
-    console.log("=> post:/api/books/categories");
-    response.status(201).send(book);
-});
-
-app.route('/api/books/categories/:id').put((request, response) => {
-    const bookCategoryId = +request.params['id'];
-    const bookCategory = request.body;
-
-    const index = BOOKS_CATEGORIES.findIndex(bookIterator => bookCategoryIterator.id === bookCategoryId);
-    BOOKS_CATEGORIES[index] = bookCategory;
-
-    console.log("=> put:/api/books/categories/" + bookCategoryId);
-    response.status(200).send(book);
-});
-
-app.route('/api/books/categories/:id').delete((request, response) => {
-    const bookCategoryId = +request.params['id'];
-    const bookCategoryDeleted = BOOKS_CATEGORIES.find(bookIterator => bookCategoryIterator.id === bookCategoryId);
-    BOOKS_CATEGORIES = BOOKS_CATEGORIES.filter(bookIterator => bookCategoryIterator.id !== bookCategoryId);
-
-    console.log("=> delete:/api/books/categories/" + bookCategoryId);
     response.status(200).send(bookDeleted);
 });
 
