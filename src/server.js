@@ -1,4 +1,4 @@
-import * as C from './endpoints-details.mjs';
+import * as CONST from './endpoints-details.mjs';
 import * as DATA from "./endpoints.data.mjs"
 
 import express from "express";
@@ -10,10 +10,10 @@ const app = express();
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
-app.listen(C.PORT, () => console.log(`Server Started ON ${C.HOST}:${C.PORT}`));
+app.listen(CONST.PORT, () => console.log(`Server Started ON ${CONST.HOST}:${CONST.PORT}`));
 
 // MAIN endpoint
-app.route('/').get((request, response) => { response.send(C.ENDPOINTS) });
+app.route('/').get((request, response) => { response.send(CONST.ENDPOINTS) });
 
 // ################# \\
 // COURSES endpoints \\
