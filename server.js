@@ -3,22 +3,19 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 
-var currentUser = "MOCK";
-const PORT = 3100;
-
-var corsOptions = {
+let currentUser = "MOCK";
+const PORT = 5555;
+let corsOptions = {
     orgim: '/',
-    optionsSuccessStatus: 200
 }
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
-
 app.listen(PORT, () => console.log(`Server Started ON http://localhost:${PORT}`));
 
 // MAIN endpoint
 app.route('/').get((request, response) => {
-    let endpoints = `
+    const ENDPOINTS = `
         <h1>*** SIMPLE MOCK ENDPOINTS TO FRONTEND PROJECTS ***</h1>
         <br>
         <h3>COURSE Object: {
@@ -63,202 +60,210 @@ app.route('/').get((request, response) => {
             name: string,
             description: string
         }</h3>
-        <h4>/api/categories (GET - POST)</h3>
-        <h4>/api/categories/:id (GET - PUT - DELETE)</h3>
+        <h4>/api/books/categories (GET - POST)</h3>
+        <h4>/api/books/categories/:id (GET - PUT - DELETE)</h3>
         <br>
     `;
-    response.send(endpoints);
+    response.send(ENDPOINTS);
 });
-
 
 // ################# \\
 // COURSES endpoints \\
 // ################# \\
-app.route('/api/courses').get((request, response) => {
-    console.log("=> get:/api/courses");
+const coursesURL = "/api/courses";
+
+app.route(coursesURL).get((request, response) => {
+    console.log(`=> get:${coursesURL}`);
     response.send(COURSES);
 });
 
-app.route('/api/courses/:id').get((request, response) => {
-    const courseId = +request.params['id'];
+app.route(coursesURL+"/:id").get((request, response) => {
+    const id = +request.params['id'];
 
-    console.log("=> get:/api/courses/" + courseId);
-    response.status(200).send(COURSES.find(courseIterator => courseIterator.id === courseId));
+    console.log(`=> get:${coursesURL}/${id}`);
+    response.status(200).send(COURSES.find(iterator => iterator.id === id));
 });
 
-app.route('/api/courses').post((request, response) => {
-    let course = request.body;
-    course.id = COURSES ? Math.max.apply(null, COURSES.map(courseIterator => courseIterator.id)) + 1 : 1;;
+app.route(coursesURL).post((request, response) => {
+    let body = request.body;
+    body.id = COURSES ? Math.max.apply(null, COURSES.map(iterator => iterator.id)) + 1 : 1;
 
-    COURSES.push(course);
+    COURSES.push(body);
 
-    console.log("=> post:/api/courses");
-    response.status(201).send(course);
+    console.log(`=> post:${coursesURL}`);
+    response.status(201).send(body);
 });
 
-app.route('/api/courses/:id').put((request, response) => {
-    const courseId = +request.params['id'];
-    const course = request.body;
+app.route(coursesURL+"/:id").put((request, response) => {
+    const id = +request.params['id'];
+    const body = request.body;
+    const index = COURSES.findIndex(iterator => iterator.id === id);
 
-    const index = COURSES.findIndex(courseIterator => courseIterator.id === courseId);
-    COURSES[index] = course;
+    COURSES[index] = body;
 
-    console.log("=> put:/api/courses/" + courseId);
-    response.status(200).send(course);
+    console.log(`=> put:${coursesURL}/${id}`);
+    response.status(200).send(body);
 });
 
-app.route('/api/courses/:id').delete((request, response) => {
-    const courseId = +request.params['id'];
-    const courseDeleted = COURSES.find(courseIterator => courseIterator.id === courseId);
-    COURSES = COURSES.filter(courseIterator => courseIterator.id !== courseId);
+app.route(coursesURL+"/:id").delete((request, response) => {
+    const id = +request.params['id'];
+    const objDeleted = COURSES.find(iterator => iterator.id === id);
 
-    console.log("=> delete:/api/courses/" + courseId);
-    response.status(200).send(courseDeleted);
+    COURSES = COURSES.filter(iterator => iterator.id !== id);
+
+    console.log(`=> delete:${coursesURL}/${id}`);
+    response.status(200).send(objDeleted);
 });
-
 
 // ################# \\
 // PESSOAS endpoints \\
 // ################# \\
-app.route('/api/pessoas').get((request, response) => {
-    console.log("=> get:/api/pessoas");
+const pessoasURL = "/api/pessoas";
+
+app.route(pessoasURL).get((request, response) => {
+    console.log(`=> get:${pessoasURL}`);
     response.send(PESSOAS);
 });
 
-app.route('/api/pessoas/:id').get((request, response) => {
-    const pessoaId = +request.params['id'];
+app.route(pessoasURL+"/:id").get((request, response) => {
+    const id = +request.params['id'];
 
-    console.log("=> get:/api/pessoas/" + pessoaId);
-    response.status(200).send(PESSOAS.find(pessoaIterator => pessoaIterator.id === pessoaId));
+    console.log(`=> get:${pessoasURL}/${id}`);
+    response.status(200).send(PESSOAS.find(iterator => iterator.id === id));
 });
 
-app.route('/api/pessoas').post((request, response) => {
-    let pessoa = request.body;
-    pessoa.id = PESSOAS ? Math.max.apply(null, PESSOAS.map(pessoaIterator => pessoaIterator.id)) + 1 : 1;;
+app.route(pessoasURL).post((request, response) => {
+    let body = request.body;
+    body.id = PESSOAS ? Math.max.apply(null, PESSOAS.map(iterator => iterator.id)) + 1 : 1;
 
-    PESSOAS.push(pessoa);
+    PESSOAS.push(body);
 
-    console.log("=> post:/api/pessoas");
-    response.status(201).send(pessoa);
+    console.log(`=> post:${pessoasURL}`);
+    response.status(201).send(body);
 });
 
-app.route('/api/pessoas/:id').put((request, response) => {
-    const pessoaId = +request.params['id'];
-    const pessoa = request.body;
+app.route(pessoasURL+"/:id").put((request, response) => {
+    const id = +request.params['id'];
+    const body = request.body;
+    const index = PESSOAS.findIndex(iterator => iterator.id === id);
 
-    const index = PESSOAS.findIndex(pessoaIterator => pessoaIterator.id === pessoaId);
-    PESSOAS[index] = pessoa;
+    PESSOAS[index] = body;
 
-    console.log("=> put:/api/pessoas/" + pessoaId);
-    response.status(200).send(pessoa);
+    console.log(`=> put:${pessoasURL}/${id}`);
+    response.status(200).send(body);
 });
 
-app.route('/api/pessoas/:id').delete((request, response) => {
-    const pessoaId = +request.params['id'];
-    const pessoaDeleted = PESSOAS.find(pessoaIterator => pessoaIterator.id === pessoaId);
-    PESSOAS = PESSOAS.filter(pessoaIterator => pessoaIterator.id !== pessoaId);
+app.route(pessoasURL+"/:id").delete((request, response) => {
+    const id = +request.params['id'];
+    const objDeleted = PESSOAS.find(iterator => iterator.id === id);
 
-    console.log("=> delete:/api/pessoas/" + pessoaId);
-    response.status(200).send(pessoaDeleted);
+    PESSOAS = PESSOAS.filter(iterator => iterator.id !== id);
+
+    console.log(`=> delete:${pessoasURL}/${id}`);
+    response.status(200).send(objDeleted);
 });
-
 
 // ########################## \\
 // BOOKS CATEGORIES endpoints \\
 // ########################## \\
-app.route('/api/books/categories').get((request, response) => {
-    console.log("=> get:/api/books/categories");
+const booksCategoriesURL = "/api/books/categories";
+
+app.route(booksCategoriesURL).get((request, response) => {
+    console.log(`=> get:${booksCategoriesURL}`);
     response.send(BOOKS_CATEGORIES);
 });
 
-app.route('/api/books/categories/:id').get((request, response) => {
-    const bookCategoryId = +request.params['id'];
+app.route(booksCategoriesURL+"/:id").get((request, response) => {
+    const id = +request.params['id'];
 
-    console.log("=> get:/api/books/categories/" + bookCategoryId);
-    response.status(200).send(BOOKS_CATEGORIES.find(bookCategoryIterator => bookCategoryIterator.id === bookCategoryId));
+    console.log(`=> get:${booksCategoriesURL}/${id}`);
+    response.status(200).send(BOOKS_CATEGORIES.find(iterator => iterator.id === id));
 });
 
-app.route('/api/books/categories').post((request, response) => {
-    let bookCategory = request.body;
+app.route(booksCategoriesURL).post((request, response) => {
+    let body = request.body;
+    body.id = BOOKS_CATEGORIES ? Math.max.apply(null, BOOKS_CATEGORIES.map(iterator => iterator.id)) + 1 : 1;
 
-    bookCategory.id = BOOKS_CATEGORIES ? Math.max.apply(null, BOOKS_CATEGORIES.map(bookIterator => bookCategoryIterator.id)) + 1 : 1;
-    BOOKS_CATEGORIES.push(book);
+    BOOKS_CATEGORIES.push(body);
 
-    console.log("=> post:/api/books/categories");
-    response.status(201).send(book);
+    console.log(`=> post:${booksCategoriesURL}`);
+    response.status(201).send(body);
 });
 
-app.route('/api/books/categories/:id').put((request, response) => {
-    const bookCategoryId = +request.params['id'];
-    const bookCategory = request.body;
+app.route(booksCategoriesURL+"/:id").put((request, response) => {
+    const id = +request.params['id'];
+    const body = request.body;
+    const index = BOOKS_CATEGORIES.findIndex(iterator => iterator.id === id);
 
-    const index = BOOKS_CATEGORIES.findIndex(bookIterator => bookCategoryIterator.id === bookCategoryId);
-    BOOKS_CATEGORIES[index] = bookCategory;
+    BOOKS_CATEGORIES[index] = body;
 
-    console.log("=> put:/api/books/categories/" + bookCategoryId);
-    response.status(200).send(book);
+    console.log(`=> put:${booksCategoriesURL}/${id}`);
+    response.status(200).send(body);
 });
 
-app.route('/api/books/categories/:id').delete((request, response) => {
-    const bookCategoryId = +request.params['id'];
-    const bookCategoryDeleted = BOOKS_CATEGORIES.find(bookIterator => bookCategoryIterator.id === bookCategoryId);
-    BOOKS_CATEGORIES = BOOKS_CATEGORIES.filter(bookIterator => bookCategoryIterator.id !== bookCategoryId);
+app.route(booksCategoriesURL+"/:id").delete((request, response) => {
+    const id = +request.params['id'];
+    const objDeleted = BOOKS_CATEGORIES.find(iterator => iterator.id === id);
 
-    console.log("=> delete:/api/books/categories/" + bookCategoryId);
-    response.status(200).send(bookDeleted);
+    BOOKS_CATEGORIES = BOOKS_CATEGORIES.filter(iterator => iterator.id !== id);
+
+    console.log(`=> delete:${booksCategoriesURL}/${id}`);
+    response.status(200).send(objDeleted);
 });
-
 
 // ############### \\
 // BOOKS endpoints \\
 // ############### \\
-app.route('/api/books').get((request, response) => {
-    console.log("=> get:/api/books");
+const booksURL = "/api/books";
+
+app.route(booksURL).get((request, response) => {
+    console.log(`=> get:${booksURL}`);
     response.send(BOOKS);
 });
 
-app.route('/api/books/:id').get((request, response) => {
-    const bookId = +request.params['id'];
+app.route(booksURL+"/:id").get((request, response) => {
+    const id = +request.params['id'];
 
-    console.log("=> get:/api/books/" + bookId);
-    response.status(200).send(BOOKS.find(bookIterator => bookIterator.id === bookId));
+    console.log(`=> get:${booksURL}/${id}`);
+    response.status(200).send(BOOKS.find(iterator => iterator.id === id));
 });
 
-app.route('/api/books').post((request, response) => {
-    let book = request.body;
-    book.id = BOOKS ? Math.max.apply(null, BOOKS.map(bookIterator => bookIterator.id)) + 1 : 1;;
+app.route(booksURL).post((request, response) => {
+    let body = request.body;
+    body.id = BOOKS ? Math.max.apply(null, BOOKS.map(iterator => iterator.id)) + 1 : 1;
 
-    BOOKS.push(book);
+    BOOKS.push(body);
 
-    console.log("=> post:/api/books");
-    response.status(201).send(book);
+    console.log(`=> post:${booksURL}`);
+    response.status(201).send(body);
 });
 
-app.route('/api/books/:id').put((request, response) => {
-    const bookId = +request.params['id'];
-    const book = request.body;
+app.route(booksURL+"/:id").put((request, response) => {
+    const id = +request.params['id'];
+    const body = request.body;
+    const index = BOOKS.findIndex(iterator => iterator.id === id);
 
-    const index = BOOKS.findIndex(bookIterator => bookIterator.id === bookId);
-    BOOKS[index] = book;
+    BOOKS[index] = body;
 
-    console.log("=> put:/api/books/" + bookId);
-    response.status(200).send(book);
+    console.log(`=> put:${booksURL}/${id}`);
+    response.status(200).send(body);
 });
 
-app.route('/api/books/:id').delete((request, response) => {
-    const bookId = +request.params['id'];
-    const bookDeleted = BOOKS.find(bookIterator => bookIterator.id === bookId);
-    BOOKS = BOOKS.filter(bookIterator => bookIterator.id !== bookId);
+app.route(booksURL+"/:id").delete((request, response) => {
+    const id = +request.params['id'];
+    const objDeleted = BOOKS.find(iterator => iterator.id === id);
 
-    console.log("=> delete:/api/books/" + bookId);
-    response.status(200).send(bookDeleted);
+    BOOKS = BOOKS.filter(iterator => iterator.id !== id);
+
+    console.log(`=> delete:${booksURL}/${id}`);
+    response.status(200).send(objDeleted);
 });
 
-
+// ###################################### \\
 // ###################################### \\
 // ########  MOCK  Data  Arrays  ######## \\
 // ###################################### \\
-
+// ###################################### \\
 var COURSES = [
     {
         id: 1,
