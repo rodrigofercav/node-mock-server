@@ -1,270 +1,9 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const app = express();
-
-let currentUser = "MOCK";
-const PORT = 5555;
-let corsOptions = {
-    orgim: '/',
-}
-
-app.use(cors(corsOptions));
-app.use(bodyParser.json());
-app.listen(PORT, () => console.log(`Server Started ON http://localhost:${PORT}`));
-
-// MAIN endpoint
-app.route('/').get((request, response) => {
-    const ENDPOINTS = `
-        <h1>*** SIMPLE MOCK ENDPOINTS TO FRONTEND PROJECTS ***</h1>
-        <br>
-        <h3>COURSE Object: {
-            id: number,
-            name: string,
-            imageUrl: string,
-            description: string,
-            price: number,
-            code: string,
-            duration: number,
-            rating: number,
-            releaseDate: string
-        }</h3>
-        <h4>/api/courses (GET - POST) </h3>
-        <h4>/api/courses/:id (GET - PUT - DELETE)</h3>
-        <br>
-        <h3>PESSOA Object: {
-            id: number,
-            nome: string,
-            data_nascimento: string,
-            email: string,
-            sexo: string
-        }</h3>
-        <h4>/api/pessoas (GET - POST)</h3>
-        <h4>/api/pessoas/:id (GET - PUT - DELETE)</h3>
-        <br>
-        <h3>BOOK Object: {
-            id: number,
-            name: string,
-            description: string,
-            author_id: string,
-            price: number,
-            image_url: string,
-            discount: number,
-            category_id: number
-        }</h3>
-        <h4>/api/books (GET - POST)</h3>
-        <h4>/api/books/:id (GET - PUT - DELETE)</h3>
-        <br>
-        <h3>BOOK CATEGORY Object: {
-            id: number,
-            name: string,
-            description: string
-        }</h3>
-        <h4>/api/books/categories (GET - POST)</h3>
-        <h4>/api/books/categories/:id (GET - PUT - DELETE)</h3>
-        <br>
-    `;
-    response.send(ENDPOINTS);
-});
-
-// ################# \\
-// COURSES endpoints \\
-// ################# \\
-const coursesURL = "/api/courses";
-
-app.route(coursesURL).get((request, response) => {
-    console.log(`=> get:${coursesURL}`);
-    response.send(COURSES);
-});
-
-app.route(coursesURL+"/:id").get((request, response) => {
-    const id = +request.params['id'];
-
-    console.log(`=> get:${coursesURL}/${id}`);
-    response.status(200).send(COURSES.find(iterator => iterator.id === id));
-});
-
-app.route(coursesURL).post((request, response) => {
-    let body = request.body;
-    body.id = COURSES ? Math.max.apply(null, COURSES.map(iterator => iterator.id)) + 1 : 1;
-
-    COURSES.push(body);
-
-    console.log(`=> post:${coursesURL}`);
-    response.status(201).send(body);
-});
-
-app.route(coursesURL+"/:id").put((request, response) => {
-    const id = +request.params['id'];
-    const body = request.body;
-    const index = COURSES.findIndex(iterator => iterator.id === id);
-
-    COURSES[index] = body;
-
-    console.log(`=> put:${coursesURL}/${id}`);
-    response.status(200).send(body);
-});
-
-app.route(coursesURL+"/:id").delete((request, response) => {
-    const id = +request.params['id'];
-    const objDeleted = COURSES.find(iterator => iterator.id === id);
-
-    COURSES = COURSES.filter(iterator => iterator.id !== id);
-
-    console.log(`=> delete:${coursesURL}/${id}`);
-    response.status(200).send(objDeleted);
-});
-
-// ################# \\
-// PESSOAS endpoints \\
-// ################# \\
-const pessoasURL = "/api/pessoas";
-
-app.route(pessoasURL).get((request, response) => {
-    console.log(`=> get:${pessoasURL}`);
-    response.send(PESSOAS);
-});
-
-app.route(pessoasURL+"/:id").get((request, response) => {
-    const id = +request.params['id'];
-
-    console.log(`=> get:${pessoasURL}/${id}`);
-    response.status(200).send(PESSOAS.find(iterator => iterator.id === id));
-});
-
-app.route(pessoasURL).post((request, response) => {
-    let body = request.body;
-    body.id = PESSOAS ? Math.max.apply(null, PESSOAS.map(iterator => iterator.id)) + 1 : 1;
-
-    PESSOAS.push(body);
-
-    console.log(`=> post:${pessoasURL}`);
-    response.status(201).send(body);
-});
-
-app.route(pessoasURL+"/:id").put((request, response) => {
-    const id = +request.params['id'];
-    const body = request.body;
-    const index = PESSOAS.findIndex(iterator => iterator.id === id);
-
-    PESSOAS[index] = body;
-
-    console.log(`=> put:${pessoasURL}/${id}`);
-    response.status(200).send(body);
-});
-
-app.route(pessoasURL+"/:id").delete((request, response) => {
-    const id = +request.params['id'];
-    const objDeleted = PESSOAS.find(iterator => iterator.id === id);
-
-    PESSOAS = PESSOAS.filter(iterator => iterator.id !== id);
-
-    console.log(`=> delete:${pessoasURL}/${id}`);
-    response.status(200).send(objDeleted);
-});
-
-// ########################## \\
-// BOOKS CATEGORIES endpoints \\
-// ########################## \\
-const booksCategoriesURL = "/api/books/categories";
-
-app.route(booksCategoriesURL).get((request, response) => {
-    console.log(`=> get:${booksCategoriesURL}`);
-    response.send(BOOKS_CATEGORIES);
-});
-
-app.route(booksCategoriesURL+"/:id").get((request, response) => {
-    const id = +request.params['id'];
-
-    console.log(`=> get:${booksCategoriesURL}/${id}`);
-    response.status(200).send(BOOKS_CATEGORIES.find(iterator => iterator.id === id));
-});
-
-app.route(booksCategoriesURL).post((request, response) => {
-    let body = request.body;
-    body.id = BOOKS_CATEGORIES ? Math.max.apply(null, BOOKS_CATEGORIES.map(iterator => iterator.id)) + 1 : 1;
-
-    BOOKS_CATEGORIES.push(body);
-
-    console.log(`=> post:${booksCategoriesURL}`);
-    response.status(201).send(body);
-});
-
-app.route(booksCategoriesURL+"/:id").put((request, response) => {
-    const id = +request.params['id'];
-    const body = request.body;
-    const index = BOOKS_CATEGORIES.findIndex(iterator => iterator.id === id);
-
-    BOOKS_CATEGORIES[index] = body;
-
-    console.log(`=> put:${booksCategoriesURL}/${id}`);
-    response.status(200).send(body);
-});
-
-app.route(booksCategoriesURL+"/:id").delete((request, response) => {
-    const id = +request.params['id'];
-    const objDeleted = BOOKS_CATEGORIES.find(iterator => iterator.id === id);
-
-    BOOKS_CATEGORIES = BOOKS_CATEGORIES.filter(iterator => iterator.id !== id);
-
-    console.log(`=> delete:${booksCategoriesURL}/${id}`);
-    response.status(200).send(objDeleted);
-});
-
-// ############### \\
-// BOOKS endpoints \\
-// ############### \\
-const booksURL = "/api/books";
-
-app.route(booksURL).get((request, response) => {
-    console.log(`=> get:${booksURL}`);
-    response.send(BOOKS);
-});
-
-app.route(booksURL+"/:id").get((request, response) => {
-    const id = +request.params['id'];
-
-    console.log(`=> get:${booksURL}/${id}`);
-    response.status(200).send(BOOKS.find(iterator => iterator.id === id));
-});
-
-app.route(booksURL).post((request, response) => {
-    let body = request.body;
-    body.id = BOOKS ? Math.max.apply(null, BOOKS.map(iterator => iterator.id)) + 1 : 1;
-
-    BOOKS.push(body);
-
-    console.log(`=> post:${booksURL}`);
-    response.status(201).send(body);
-});
-
-app.route(booksURL+"/:id").put((request, response) => {
-    const id = +request.params['id'];
-    const body = request.body;
-    const index = BOOKS.findIndex(iterator => iterator.id === id);
-
-    BOOKS[index] = body;
-
-    console.log(`=> put:${booksURL}/${id}`);
-    response.status(200).send(body);
-});
-
-app.route(booksURL+"/:id").delete((request, response) => {
-    const id = +request.params['id'];
-    const objDeleted = BOOKS.find(iterator => iterator.id === id);
-
-    BOOKS = BOOKS.filter(iterator => iterator.id !== id);
-
-    console.log(`=> delete:${booksURL}/${id}`);
-    response.status(200).send(objDeleted);
-});
-
 // ###################################### \\
 // ###################################### \\
 // ########  MOCK  Data  Arrays  ######## \\
 // ###################################### \\
 // ###################################### \\
-var COURSES = [
+export const COURSES = [
     {
         id: 1,
         name: 'Angular: CLI',
@@ -322,7 +61,7 @@ var COURSES = [
     }
 ];
 
-var PESSOAS = [
+export const PESSOAS = [
     { id: 1, nome: 'Rodrigo Cavalcante', data_nascimento: "18/05/1985", email: "rodrigo@email.com", sexo: "M" },
     { id: 2, nome: 'Karina Cavalcante', data_nascimento: "16/06/1979", email: "karina@email.com", sexo: "F" },
     { id: 3, nome: 'Vinícius Cavalcante', data_nascimento: "05/10/2015", email: "vinicius@email.com", sexo: "M" },
@@ -335,7 +74,7 @@ var PESSOAS = [
     { id: 10, nome: 'Maria Eduarda', data_nascimento: "08/01/2013", email: "duda@email.com", sexo: "F" }
 ];
 
-var BOOKS_CATEGORIES = [
+export const BOOKS_CATEGORIES = [
     { id: 1, name: "Action and Adventure", description: "Description of Action and Adventure book category." },
     { id: 2, name: "Classics", description: "Description of Classics book category." },
     { id: 3, name: "Comic Book or Graphic Novel", description: "Description of Comic Book or Graphic Novel book category." },
@@ -359,7 +98,7 @@ var BOOKS_CATEGORIES = [
     { id: 21, name: "True Crime", description: "Description of True Crime book category." }
 ];
 
-var BOOKS = [
+export const BOOKS = [
     {
         id: 1,
         name: "Don Quixote",
