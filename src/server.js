@@ -3,14 +3,14 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
-import books_categ from "./src/routes/books-categ.js";
-import books from "./src/routes/books.js";
-import cnaes_mei from "./src/routes/cnaes-mei.js";
-import courses from "./src/routes/courses.js";
-import pessoas from "./src/routes/pessoas.js";
-import usuarios from "./src/routes/usuarios.js";
+import books_categ from "./routes/books-categ.js";
+import books from "./routes/books.js";
+import cnaes_mei from "./routes/cnaes-mei.js";
+import courses from "./routes/courses.js";
+import pessoas from "./routes/pessoas.js";
+import usuarios from "./routes/usuarios.js";
 
-import { HELP as endp } from "./src/mock/endpoints.mjs";
+import { HELP as endp } from "./mock/endpoints.mjs";
 
 //env-variables
 dotenv.config();
