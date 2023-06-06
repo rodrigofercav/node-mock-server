@@ -14,17 +14,14 @@ import { HELP as endp } from "./mock/endpoints.mjs";
 
 //env-variables
 dotenv.config();
-const api_host = process.env.API_HOST;
 const api_port = process.env.API_PORT;
-const cors_options = { origin: process.env.CORS_ORIGIN };
+//const cors_options = { origin: process.env.CORS_ORIGIN };
 
 //init-app
 const server = express();
 server.use(body_parser.json());
-server.use(cors(cors_options));
-server.listen(api_port, () =>
-	console.log(`Server started on ${api_host}:${api_port}`)
-);
+server.use(cors());
+server.listen(api_port, () => console.log(`Server Started!`));
 
 //root-server-endpoint
 server.route("/").get((req, res) => res.send("Node Mock Server"));
