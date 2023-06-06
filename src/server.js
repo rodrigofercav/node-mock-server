@@ -27,7 +27,7 @@ server.listen(api_port, () =>
 );
 
 //root-server-endpoint
-server.route("/").get((req, res) => res.send(endp));
+server.route("/").get((req, res) => res.send("Node Mock Server"));
 
 //routes-files
 server.use([books, books_categ, cnaes_mei, courses, pessoas, usuarios]);
