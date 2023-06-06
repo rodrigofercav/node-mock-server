@@ -1,4 +1,4 @@
-import express, { json } from "express";
+import express from "express";
 import { BOOKS_CAT as data } from "../mock/data.arrays.mjs";
 
 const router = express.Router();
